@@ -12,6 +12,7 @@ members = [
     "webhooks/validating/configuration",
     "discovery-utils", 
     "discovery-handlers/debug-echo", 
+    "discovery-handlers/wasi-debug-echo",
     "discovery-handlers/onvif", 
     "discovery-handlers/opcua", 
     "discovery-handlers/udev", 
