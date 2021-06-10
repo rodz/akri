@@ -1,3 +1,6 @@
+pub mod discovery;
+pub mod discovery_grpc;
+
 #[macro_use]
 extern crate serde_derive;
 

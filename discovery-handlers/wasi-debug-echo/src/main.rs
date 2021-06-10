@@ -2,6 +2,8 @@ use std::env;
 use std::fs::File;
 use std::io::Read;
 use std::path::Path;
+use tokio::sync::mpsc;
+use wasi_debug_echo::discovery_grpc::DiscoveryHandler;
 
 // TODO: make this configurable
 pub const DISCOVERY_INTERVAL_SECS: u64 = 10;
@@ -15,6 +17,18 @@ pub const DEBUG_ECHO_AVAILABILITY_CHECK_PATH: &str = "/tmp/debug-echo-availabili
 /// String to write into DEBUG_ECHO_AVAILABILITY_CHECK_PATH to make Other devices undiscoverable
 pub const OFFLINE: &str = "OFFLINE";
 
+/// The DiscoveryHandlerImpl discovers a list of devices, named in its `descriptions`.
+/// It mocks discovering the devices by inspecting the contents of the file at `DEBUG_ECHO_AVAILABILITY_CHECK_PATH`.
+/// If the file contains "OFFLINE", it won't discover any of the devices, else it discovers them all.
+pub struct DiscoveryHandlerImpl {
+    register_sender: Option<mpsc::Sender<()>>,
+}
+
+impl DiscoveryHandlerImpl {
+    pub fn new(register_sender: Option<mpsc::Sender<()>>) -> Self {
+        DiscoveryHandlerImpl { register_sender }
+    }
+}
 
 fn main() {
     println!("hello from stdout!");
@@ -27,7 +41,7 @@ fn main() {
     println!("");
 
     // open a path using the hostpath volume
-    let path = Path::new("/mnt/storage/bacon_ipsum.txt");
+    let path = Path::new("/data/storage/bacon_ipsum.txt");
     let display = path.display();
 
     let mut file = match File::open(&path) {
@@ -46,7 +60,7 @@ impl DiscoveryHandler for DiscoveryHandlerImpl {
     fn discover(
         &self
     ) {
-        info!("discover - called for debug echo protocol");
+        log::info!("discover - called for debug echo protocol");
     }
 }
 */

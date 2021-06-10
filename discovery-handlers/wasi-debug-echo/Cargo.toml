@@ -18,8 +18,11 @@ serde_json = "1.0.45"
 serde_yaml = "0.8.11"
 serde_derive = "1.0.104"
 tokio = { version = "1.6.0", features = ["sync", "time", "rt", "fs", "macros"] }
-protobuf = "2.23"
 futures = "~0.3"
+protobuf = "2.18.2"
+grpc = "0.8.3"
+grpc-protobuf = "0.8.3"
+protoc-rust = "2.18.2"
 
 [build-dependencies]
 protoc-rust-grpc = "~0.8"
