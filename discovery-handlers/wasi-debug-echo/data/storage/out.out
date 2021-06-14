@@ -1,0 +1,1 @@
+{"devices":[{"id":"foo0","properties":{"DEBUG_ECHO_DESCRIPTION":"foo0"},"mounts":[],"device_specs":[]},{"id":"foo1","properties":{"DEBUG_ECHO_DESCRIPTION":"foo1"},"mounts":[],"device_specs":[]},{"id":"foo2","properties":{"DEBUG_ECHO_DESCRIPTION":"foo2"},"mounts":[],"device_specs":[]}]}
