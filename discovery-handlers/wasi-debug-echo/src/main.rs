@@ -55,7 +55,7 @@ fn main() {
         let availability =
             fs::read_to_string(DEBUG_ECHO_AVAILABILITY_CHECK_PATH).unwrap_or_default();
         
-        if (availability.contains(OFFLINE) && !offline) || offline && first_loop {
+        if (availability.contains(OFFLINE) && !offline) || (offline && first_loop) {
             if first_loop {
                 first_loop = false;
             }
@@ -63,7 +63,7 @@ fn main() {
             offline = true;
             // Output empty value
             write_output_file(Vec::new());
-        } else if (!availability.contains(OFFLINE) && offline) || !offline && first_loop {
+        } else if (!availability.contains(OFFLINE) && offline) || (!offline && first_loop) {
             if first_loop {
                 first_loop = false;
             }
@@ -94,12 +94,12 @@ pub fn read_input_file () -> DebugEchoDiscoveryDetails  {
     let path = Path::new("/data/storage/in.in");
     let display = path.display();
 
-    let new_contents = fs::read_to_string(path).expect(format!("could not read {}", display).as_str());
+    let contents = fs::read_to_string(path).expect(format!("could not read {}", display).as_str());
     println!("Checked for input and found: ");
-    println!("{}", new_contents);
+    println!("{}", contents);
 
     let new_details: DebugEchoDiscoveryDetails = 
-            deserialize_discovery_details(&new_contents).unwrap();
+            deserialize_discovery_details(&contents).unwrap();
 
     return new_details;
 }
