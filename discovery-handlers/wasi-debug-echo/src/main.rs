@@ -1,6 +1,5 @@
 mod models;
 
-use std::env;
 use std::path::Path;
 use std::{collections::HashMap, fs};
 use std::time::Duration;
@@ -42,15 +41,17 @@ fn main() {
             .contains(OFFLINE);
     
     let mut first_loop = true;
-    let mut count = 0;
 
     loop {
         thread::sleep(Duration::from_secs(DISCOVERY_INTERVAL_SECS));
-        println!("Count: {}", count);
-        count +=1;
 
         input = read_input_file();
         descriptions = input.descriptions;
+
+        if descriptions.is_empty() {
+            println!("Input not specified yet!");
+            continue;
+        }
 
         let availability =
             fs::read_to_string(DEBUG_ECHO_AVAILABILITY_CHECK_PATH).unwrap_or_default();
@@ -84,26 +85,35 @@ fn main() {
                     }
                 })
                 .collect::<Vec<Device>>();
-            // Send device list
+            // Output device list
             write_output_file(devices);
         }
     }
 }
 
+// This reads the input file and serialize it to the proper struct format.
 pub fn read_input_file () -> DebugEchoDiscoveryDetails  {
     let path = Path::new("/data/storage/in.in");
     let display = path.display();
 
     let contents = fs::read_to_string(path).expect(format!("could not read {}", display).as_str());
-    println!("Checked for input and found: ");
-    println!("{}", contents);
+    println!("Checked for input and found:\n{}", contents);
 
-    let new_details: DebugEchoDiscoveryDetails = 
-            deserialize_discovery_details(&contents).unwrap();
+    let new_details: DebugEchoDiscoveryDetails = match deserialize_discovery_details(&contents) {
+        Ok(details) => details,
+        Err(error) =>  {
+            println!("An error ocorred while serializing the input: {:?}", error);
+            DebugEchoDiscoveryDetails {
+                descriptions: Vec::new(),
+            }
+        }
+    };
 
     return new_details;
 }
 
+// This received the device list and output it in the proper JSON format to the
+// output file.
 pub fn write_output_file (_devices: Vec<Device>) {
     let path = Path::new("/data/storage/out.out");
 
@@ -116,7 +126,7 @@ pub fn write_output_file (_devices: Vec<Device>) {
     let json_output = serde_json::to_string(&output_obj).unwrap();
     println!("output: {}", json_output);
 
-    fs::write(path, json_output);
+    fs::write(path, json_output).expect("Failed to write output!");
 }
 
 /// This obtains the expected type `T` from a discovery details String by running it through function `f` which will
