@@ -13,6 +13,7 @@ members = [
     "discovery-utils", 
     "discovery-handlers/debug-echo", 
     "discovery-handlers/wasi-debug-echo",
+    "discovery-handlers/wde-grpc-proxy",
     "discovery-handlers/onvif", 
     "discovery-handlers/opcua", 
     "discovery-handlers/udev", 
