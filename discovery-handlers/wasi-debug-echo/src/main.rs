@@ -19,6 +19,10 @@ pub const DEBUG_ECHO_DESCRIPTION_LABEL: &str = "DEBUG_ECHO_DESCRIPTION";
 // TODO: make this configurable
 pub const DISCOVERY_INTERVAL_SECS: u64 = 4;
 
+// Input and output files dir.
+pub const OUTPUT_FILE_PATH: &str = "/data/storage/out.out";
+pub const INPUT_FILE_PATH: &str = "/data/storage/in.in";
+
 /// File acting as an environment variable for testing discovery.
 /// To mimic an instance going offline, kubectl exec into the pod running this discovery handler
 /// and echo "OFFLINE" > /tmp/debug-echo-availability.txt.
@@ -45,13 +49,13 @@ fn main() {
     loop {
         thread::sleep(Duration::from_secs(DISCOVERY_INTERVAL_SECS));
 
-        input = read_input_file();
-        descriptions = input.descriptions;
-
-        if descriptions.is_empty() {
+        if !has_input() {
             println!("Input not specified yet!");
             continue;
         }
+
+        input = read_input_file();
+        descriptions = input.descriptions;
 
         let availability =
             fs::read_to_string(DEBUG_ECHO_AVAILABILITY_CHECK_PATH).unwrap_or_default();
@@ -93,7 +97,7 @@ fn main() {
 
 // This reads the input file and serialize it to the proper struct format.
 pub fn read_input_file () -> DebugEchoDiscoveryDetails  {
-    let path = Path::new("/data/storage/in.in");
+    let path = Path::new(INPUT_FILE_PATH);
     let display = path.display();
 
     let contents = fs::read_to_string(path).expect(format!("could not read {}", display).as_str());
@@ -115,7 +119,7 @@ pub fn read_input_file () -> DebugEchoDiscoveryDetails  {
 // This received the device list and output it in the proper JSON format to the
 // output file.
 pub fn write_output_file (_devices: Vec<Device>) {
-    let path = Path::new("/data/storage/out.out");
+    let path = Path::new(OUTPUT_FILE_PATH);
 
     // Write output values on DebugEchoResult
     let output_obj : DebugEchoResult = DebugEchoResult {
@@ -127,6 +131,12 @@ pub fn write_output_file (_devices: Vec<Device>) {
     println!("output: {}", json_output);
 
     fs::write(path, json_output).expect("Failed to write output!");
+}
+
+// Check if input file has already been sent by gRPC proxy.
+pub fn has_input () -> bool {
+    let path = Path::new(INPUT_FILE_PATH);
+    return path.exists();
 }
 
 /// This obtains the expected type `T` from a discovery details String by running it through function `f` which will
