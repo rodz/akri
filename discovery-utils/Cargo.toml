@@ -20,6 +20,7 @@ serde_yaml = "0.8.11"
 tempfile = { version = "3.1.0", optional = true }
 tokio = { version = "0.2", features = ["time", "net", "sync"] }
 tower = "0.3" 
+tonic-build = "0.1.1"
 
 [features]
 mock-discovery-handler = ["async-trait", "tempfile"]

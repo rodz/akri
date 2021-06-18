@@ -44,11 +44,8 @@ pub mod discovery_handler {
             }
             Err(_) => {
                 trace!("run_discovery_handler - registering with Agent with uds endpoint");
-                format!(
-                    "{}/{}.sock",
-                    std::env::var(super::super::DISCOVERY_HANDLERS_DIRECTORY_LABEL).unwrap(),
-                    protocol_name
-                )
+                use_uds = false;
+                format!("{}:{}", "127.0.0.1", DISCOVERY_PORT)
             }
         };
         let endpoint_clone = endpoint.clone();
@@ -199,12 +196,7 @@ pub mod server {
         discovery_handler: impl DiscoveryHandler,
         discovery_endpoint: &str,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
-        internal_run_discovery_server(
-            discovery_handler,
-            discovery_endpoint,
-            &std::env::var(super::super::DISCOVERY_HANDLERS_DIRECTORY_LABEL).unwrap(),
-        )
-        .await
+        internal_run_discovery_server(discovery_handler, discovery_endpoint, "/var/lib/akri").await
     }
 
     /// Creates a DiscoveryHandlerServer for the given Discovery Handler at the specified endpoint Verifies the endpoint
@@ -229,6 +221,7 @@ pub mod server {
             std::fs::remove_file(discovery_endpoint).unwrap_or(());
         } else {
             let addr = discovery_endpoint.parse()?;
+            println!("{}", addr);
             Server::builder()
                 .add_service(DiscoveryHandlerServer::new(discovery_handler))
                 .serve(addr)
