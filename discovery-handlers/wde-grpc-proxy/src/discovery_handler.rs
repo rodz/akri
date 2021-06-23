@@ -11,16 +11,16 @@ use tokio::time::delay_for;
 use std::path::Path;
 use std::time::Duration;
 use std::fs;
-use log::error;
+use log::{error, info};
 use tonic::{Response, Status};
 use serde::{Serialize, Deserialize};
 
 pub const DISCOVERY_INTERVAL_SECS: u64 = 4;
 
 // Input and output files dir.
-pub const OUTPUT_FILE_PATH: &str = "../wasi-debug-echo/data/storage/out.out";
-pub const INPUT_FILE_PATH: &str = "../wasi-debug-echo/data/storage/in.in";
-pub const AVAILABILITY_FILE_PATH: &str = "../wasi-debug-echo/data/storage/debug-echo-availability.txt";
+pub const OUTPUT_FILE_PATH: &str = "/tmp/wde-dir/out.out";
+pub const INPUT_FILE_PATH: &str = "/tmp/wde-dir/in.in";
+pub const AVAILABILITY_FILE_PATH: &str = "/tmp/wde-dir/debug-echo-availability.txt";
 
 pub const ONLINE: &str = "ONLINE";
 pub const OFFLINE: &str = "OFFLINE";
@@ -52,6 +52,7 @@ impl DiscoveryHandler for DiscoveryHandlerImpl {
         request: tonic::Request<DiscoverRequest>,
     ) -> Result<Response<Self::DiscoverStream>, Status> {
         println!("Connection stablished!");
+        info!("Connection stablished!");
         let register_sender = self.register_sender.clone();
         let discover_request = request.get_ref();
         let (mut discovered_devices_sender, discovered_devices_receiver) =
@@ -112,7 +113,7 @@ pub fn read_output_file () -> DiscoverResponse {
     let display = path.display();
 
     let contents = fs::read_to_string(path).expect(format!("could not read {}", display).as_str());
-    println!("Checked for input and found:\n{}", contents);
+    println!("Checked for output and found:\n{}", contents);
 
     let discovery_handler_config: DiscoverResponse = 
         discover_response_marshaller::from_json_to_discover_response(&contents);
