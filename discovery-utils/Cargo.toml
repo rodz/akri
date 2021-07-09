@@ -28,6 +28,7 @@ mock-discovery-handler = ["async-trait", "tempfile"]
 [dev-dependencies]
 async-trait = "0.1.0"
 tempfile = "3.1.0"
+tonic-build = "0.1.1"
 
 [build-dependencies]
 tonic-build = "0.1.1"

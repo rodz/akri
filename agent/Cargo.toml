@@ -43,6 +43,7 @@ tonic = "0.1"
 tower = "0.3" 
 url = "2.2.0"
 uuid = { version = "0.8.1", features = ["v4"] }
+tonic-build = "0.1.1"
 
 [build-dependencies]
 tonic-build = "0.1.1"

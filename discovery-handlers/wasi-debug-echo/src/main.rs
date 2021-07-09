@@ -20,15 +20,15 @@ pub const DEBUG_ECHO_DESCRIPTION_LABEL: &str = "DEBUG_ECHO_DESCRIPTION";
 pub const DISCOVERY_INTERVAL_SECS: u64 = 4;
 
 // Input and output files dir.
-pub const OUTPUT_FILE_PATH: &str = "/data/storage/out.out";
-pub const INPUT_FILE_PATH: &str = "/data/storage/in.in";
+pub const OUTPUT_FILE_PATH: &str = "out.out";
+pub const INPUT_FILE_PATH: &str = "in.in";
 
 /// File acting as an environment variable for testing discovery.
 /// To mimic an instance going offline, kubectl exec into the pod running this discovery handler
 /// and echo "OFFLINE" > /tmp/debug-echo-availability.txt.
 /// To mimic a device coming back online, remove the word "OFFLINE" from the file
 /// ie: echo "" > /tmp/debug-echo-availability.txt.
-pub const DEBUG_ECHO_AVAILABILITY_CHECK_PATH: &str = "/data/storage/debug-echo-availability.txt";
+pub const DEBUG_ECHO_AVAILABILITY_CHECK_PATH: &str = "debug-echo-availability.txt";
 /// String to write into DEBUG_ECHO_AVAILABILITY_CHECK_PATH to make Other devices undiscoverable
 pub const OFFLINE: &str = "OFFLINE";
 

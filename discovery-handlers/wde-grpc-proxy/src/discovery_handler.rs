@@ -18,9 +18,9 @@ use serde::{Serialize, Deserialize};
 pub const DISCOVERY_INTERVAL_SECS: u64 = 4;
 
 // Input and output files dir.
-pub const OUTPUT_FILE_PATH: &str = "/tmp/wde-dir/out.out";
-pub const INPUT_FILE_PATH: &str = "/tmp/wde-dir/in.in";
-pub const AVAILABILITY_FILE_PATH: &str = "/tmp/wde-dir/debug-echo-availability.txt";
+pub const OUTPUT_FILE_PATH: &str = "../../../../../.krustlet/volumes/wasi-debug-echo-default/wde-storage/out.out";
+pub const INPUT_FILE_PATH: &str = "../../../../../.krustlet/volumes/wasi-debug-echo-default/wde-storage/in.in";
+pub const AVAILABILITY_FILE_PATH: &str = "../../../../../.krustlet/volumes/wasi-debug-echo-default/wde-storage/debug-echo-availability.txt";
 
 pub const ONLINE: &str = "ONLINE";
 pub const OFFLINE: &str = "OFFLINE";
@@ -98,6 +98,7 @@ impl DiscoveryHandler for DiscoveryHandlerImpl {
 // This serialize the Agents input and writes it into the input file.
 pub fn write_input_file (debug_echo_discovery_details : DebugEchoDiscoveryDetails) {
     let path = Path::new(INPUT_FILE_PATH);
+    println!("Path: {}", path.to_str().unwrap());
 
     //TODO: handle errors
     let json_output = serde_json::to_string(&debug_echo_discovery_details).unwrap();
