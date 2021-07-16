@@ -213,7 +213,7 @@ custom:
 debugEcho:
   configuration:
     # enabled defines whether to load a debugEcho configuration
-    enabled: false
+    enabled: true
     # name is the Kubernetes resource name that will be created for this
     # debugEcho configuration
     name: akri-debug-echo

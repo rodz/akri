@@ -10,10 +10,10 @@ pub const UNHEALTHY: &str = "Unhealthy";
 pub const K8S_DEVICE_PLUGIN_VERSION: &str = "v1beta1";
 
 /// DevicePluginPath is the folder the kubelet expects to find Device-Plugin sockets.
-pub const DEVICE_PLUGIN_PATH: &str = "/var/lib/kubelet/device-plugins";
+pub const DEVICE_PLUGIN_PATH: &str = "/home/rodrigo/device-plugins";
 
 /// Path of the Kubelet registry socket
-pub const KUBELET_SOCKET: &str = "/var/lib/kubelet/device-plugins/kubelet.sock";
+pub const KUBELET_SOCKET: &str = "/home/rodrigo/device-plugins/kubelet.sock";
 
 /// Maximum length of time `list_and_watch` will sleep before sending kubelet another list of virtual devices
 pub const LIST_AND_WATCH_SLEEP_SECS: u64 = 60;

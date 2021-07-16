@@ -45,10 +45,13 @@ pub async fn do_config_watch(
     let config_map: ConfigMap = Arc::new(Mutex::new(HashMap::new()));
     let kube_interface = k8s::create_kube_interface();
     let mut tasks = Vec::new();
+    info!("do_config_watch - created interface");
 
     // Handle pre-existing configs
     let pre_existing_configs = kube_interface.get_configurations().await?;
+    info!("do_config_watch - config");
     for config in pre_existing_configs {
+        info!("do_config_watch - looking at config");
         let config_map = config_map.clone();
         let discovery_handler_map = discovery_handler_map.clone();
         let new_discovery_handler_sender = new_discovery_handler_sender.clone();
@@ -66,6 +69,7 @@ pub async fn do_config_watch(
     }
 
     // Watch for new configs and changes
+    info!("do_config_watch - watch configs");
     tasks.push(tokio::spawn(async move {
         watch_for_config_changes(
             &kube_interface,
@@ -189,6 +193,7 @@ async fn handle_config_add(
     new_discovery_handler_sender: broadcast::Sender<String>,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
     let config_name = config.metadata.name.clone();
+    info!("config name: {:?}", config_name);
     // Create a new instance map for this config and add it to the config map
     let instance_map: InstanceMap = Arc::new(Mutex::new(HashMap::new()));
     let (stop_discovery_sender, _): (broadcast::Sender<()>, broadcast::Receiver<()>) =

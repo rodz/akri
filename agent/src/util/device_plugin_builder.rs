@@ -104,7 +104,7 @@ impl DevicePluginBuilderInterface for DevicePluginBuilder {
             server_ender_receiver,
         )
         .await?;
-
+        tokio::time::delay_for(std::time::Duration::from_secs(1)).await;
         self.register(
             &capability_id,
             &device_endpoint,
@@ -144,7 +144,7 @@ impl DevicePluginBuilderInterface for DevicePluginBuilder {
                 )
                 .await
                 .unwrap();
-            trace!(
+            info!(
                 "serve - gracefully shutdown ... deleting socket {}",
                 socket_path_to_delete
             );
@@ -171,8 +171,8 @@ impl DevicePluginBuilderInterface for DevicePluginBuilder {
         kubelet_socket: &str,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
         info!(
-            "register - entered for Instance {} and socket_name: {}",
-            capability_id, socket_name
+            "register - entered for Instance {} and socket_name: {}, kubelet_socked: {}",
+            capability_id, socket_name, kubelet_socket
         );
         let op = DevicePluginOptions {
             pre_start_required: false,
@@ -218,10 +218,10 @@ impl DevicePluginBuilderInterface for DevicePluginBuilder {
 /// Ends when it receives message from `list_and_watch`.
 async fn shutdown_signal(mut server_ender_receiver: mpsc::Receiver<()>) {
     match server_ender_receiver.recv().await {
-        Some(_) => trace!(
+        Some(_) => info!(
             "shutdown_signal - received signal ... device plugin service gracefully shutting down"
         ),
-        None => trace!("shutdown_signal - connection to server_ender_sender closed ... error"),
+        None => info!("shutdown_signal - connection to server_ender_sender closed ... error"),
     }
 }
 
